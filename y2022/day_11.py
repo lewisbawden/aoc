@@ -67,6 +67,7 @@ def day_11_part_2(monkeys):
     monkey_lcm = 1
     for monkey in monkeys:
         monkey_lcm *= monkey.test_val
+        # may not be the actual LCM, but it still gets the job done
 
     for n_round in range(n_rounds):
         # Check output on the test data by printing
