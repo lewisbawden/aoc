@@ -30,15 +30,15 @@ class Monkey:
         to_monkey = monkeys[self.throw_to_ids[test]]
         to_monkey.items.append(item)
 
-    def throw_items(self, monkeys, gcd=None):
+    def throw_items(self, monkeys, lcm=None):
         while len(self.items) > 0:
             item = self.items.pop(0)
             new_item = self.inspect(item)
-            # Part 1 or Part 2 if using Greatest Common Divisor
-            if gcd is None:
+            # Part 1 or Part 2 if using Lowest Common Multiple
+            if lcm is None:
                 new_item = int(new_item / 3)
             else:
-                new_item = new_item % gcd
+                new_item = new_item % lcm
             self.throw(new_item, monkeys)
 
 
@@ -63,10 +63,10 @@ def day_11_part_2(monkeys):
             print(f'Monkey {i} inspected items {_monkeys[i].inspections} times.')
         print(f'Duration: {time.time() - _t0}')
 
-    # Prevent numbers from getting too large by providing the item modulo the GCD of all monkeys
-    monkey_gcd = 1
+    # Prevent numbers from getting too large by providing the item modulo the LCM of all monkeys
+    monkey_lcm = 1
     for monkey in monkeys:
-        monkey_gcd *= monkey.test_val
+        monkey_lcm *= monkey.test_val
 
     for n_round in range(n_rounds):
         # Check output on the test data by printing
@@ -76,7 +76,7 @@ def day_11_part_2(monkeys):
             print_out(n_round, monkeys)
 
         for monkey in monkeys:
-            monkey.throw_items(monkeys, monkey_gcd)
+            monkey.throw_items(monkeys, monkey_lcm)
 
     most_active_monkeys = sorted(monkeys, key=lambda m: m.inspections)
 
