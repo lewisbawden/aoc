@@ -22,7 +22,7 @@ class Traverser:
         self.nodes = {}
 
     def traverse(self):
-        node = Node(0, 0, (self.startx, self.starty), None)
+        node = Node(0, 0, (self.startx, self.starty), None, (self.startx, self.starty))
         self.nodes[node.coords] = node
         its = 0
         # Try the next possible direction - keep going until we reach the goal
@@ -31,7 +31,7 @@ class Traverser:
             node = heappop(self.queue)
             node.visited += 1
             its += 1
-        return node.total
+        return node.total, node.total - self.nodes[node.last_a].total - 1
 
     def push_valid_nn(self, parnode):
         # Check all four neighbouring coordinates (if they do not overrun the grid)
@@ -40,8 +40,16 @@ class Traverser:
             # Cannot go more than 1 height uphill
             if self.data[ni][nj] - parnode.score > 1:
                 continue
+
+            #############
+            # For part 2: update what the last visited 'a' node was
+            last_a = parnode.last_a
+            if self.data[ni][nj] == 0:
+                last_a = (ni, nj)
+            #############
+
             # Increment total by 1
-            newnode = Node(self.data[ni][nj], parnode.total + 1, (ni, nj), parnode.coords)
+            newnode = Node(self.data[ni][nj], parnode.total + 1, (ni, nj), parnode.coords, last_a)
             # If we have reached this node before (in keys), and we got there by a shorter route
             #   -> then no need to add it to the list of possible directions to try
             if newnode.coords in self.nodes.keys() and newnode.total >= self.nodes[newnode.coords].total:
@@ -51,12 +59,13 @@ class Traverser:
 
 
 class Node:
-    def __init__(self, score, total, coords, parent):
+    def __init__(self, score, total, coords, parent, last_a):
         self.score = score
         self.total = total
         self.coords = coords
         self.parent = parent
         self.visited = 0
+        self.last_a = last_a
 
     def __lt__(self, other):
         return self.score < other.score
@@ -66,14 +75,14 @@ class Node:
 
 
 def day_12_part_2(data):
-
-    return None
+    t = Traverser(*data)
+    return t.traverse()
 
 
 def parse_input(data):
     heights = {s: i for i, s in enumerate(ascii_lowercase)}
     heights['E'] = 26
-    heights['S'] = 0
+    heights['S'] = -1
     out = []
     for i, line in enumerate(data):
         row = []
