@@ -4,7 +4,7 @@ from dateutil.utils import today
 
 
 def new_aoc_template(day=today().day, year=today().year):
-    with open(f"y{year}\day_{day}_data.txt", "a+") as f:
+    with open(f"y{year}\day_{day}_data.txt", "w") as f:
         puzzle_input = get_puzzle_input(day)
         f.write(puzzle_input)
 
