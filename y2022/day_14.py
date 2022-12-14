@@ -67,7 +67,6 @@ def day_14_part_2(data):
     newcave[:, -1] = np.ones(shape=seg.shape) * Block.rock
     newcave[:, :-2] = data[0]
     data = (newcave, data[1], data[2], data[3], data[4] + 2)
-    i = 0
     try:
         while True:
             try:
@@ -75,7 +74,6 @@ def day_14_part_2(data):
                 data = drop_sand(data)
             except IndexError:
                 data = expand_cave(data)
-            i += 1
     except SAANDERROR:
         sands = 0 ** abs(data[0] - Block.sand)
         totalsand = sands.sum()
